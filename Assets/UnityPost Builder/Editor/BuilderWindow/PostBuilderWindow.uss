@@ -1,0 +1,11 @@
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.bold-text {
+    font-size: 13px;
+    -unity-font-style: bold;
+    margin: 10px 0 10px 0;
+}
