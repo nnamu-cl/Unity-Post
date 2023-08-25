@@ -97,7 +97,7 @@ namespace UnityPost.Editor
             paramsList.itemsSource = currentSettings.headerParams;
             paramsList.RefreshItems();
         }
-        
+
         private void BindItem(VisualElement e, int i)
         {
             TextField key = e.Q<TextField>("keyField");
@@ -118,10 +118,7 @@ namespace UnityPost.Editor
                 currentSettings.headerParams[i].value = s.newValue;
                 RefreshParamList();
             });
-
         }
-
-   
 
 
         private VisualElement GetParameterElement()
@@ -155,23 +152,7 @@ namespace UnityPost.Editor
             WebRequestItem webRequestItem = new WebRequestItem(settings.url);
             webRequestItem.PrependWithDefaultURL = false;
 
-            string result = "";
-
-            //Send request
-            switch (settings.currentType)
-            {
-                case RequestTypes.GET:
-                    result = await WebRequestsEngine.Active.GET(webRequestItem);
-                    break;
-                case RequestTypes.SET:
-                    result = await WebRequestsEngine.Active.SET(webRequestItem);
-                    break;
-            }
-
-            Debug.Log(result);
-
-            //display the result
-            DisplayOutput(result);
+            string result = await WebRequestsEngine.Active.GET(webRequestItem);
         }
 
         public async void SendDemoRequest()
