@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using Codice.Client.Commands;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,6 +27,7 @@ namespace UnityPost.Editor
         private PostWindowSettings internalCurrentSettings;
 
         [SerializeField] private VisualTreeAsset m_VisualTreeAsset;
+        private ListView paramsList;
 
         [MenuItem("Web Requests/Open Post Window")]
         public static void Show()
@@ -50,10 +56,96 @@ namespace UnityPost.Editor
             TextField urlInput = uxmlRoot.Q<TextField>("url-input");
             urlInput.RegisterCallback<ChangeEvent<string>>((evt) => { currentSettings.url = evt.newValue; });
 
-            //REQUEST URL
+            //SEND BUTTON
             Button sendButton = uxmlRoot.Q<Button>("send-button");
-            sendButton.clicked += () => {SendRequest(currentSettings); };
+            sendButton.clicked += () => { SendRequest(currentSettings); };
             root.Add(uxmlRoot);
+
+            //PARAMETERS
+            paramsList = uxmlRoot.Q<ListView>("header-list");
+            paramsList.makeItem = GetParameterElement;
+            paramsList.bindItem = BindItem;
+            paramsList.itemsSource = currentSettings.headerParams;
+            paramsList.selectionType = SelectionType.Multiple;
+            paramsList.RefreshItems();
+
+            //Add button
+            Button paramAdd = uxmlRoot.Q<Button>("parameter-add");
+            paramAdd.clicked += OnAddParamButton;
+        }
+
+
+        private void OnAddParamButton()
+        {
+            switch (currentSettings.currentParameterList)
+            {
+                case PostWindowSettings.ParameterList.Headers:
+                    currentSettings.headerParams.Add(
+                        new PostWindowSettings.Parameter($"Key {currentSettings.headerParams.Count}", "Value"));
+                    break;
+                case PostWindowSettings.ParameterList.Body:
+                    currentSettings.bodyParams.Add(
+                        new PostWindowSettings.Parameter($"Key {currentSettings.headerParams.Count}", "Value"));
+                    break;
+            }
+
+            RefreshParamList();
+        }
+
+        private void RefreshParamList()
+        {
+            paramsList.itemsSource = currentSettings.headerParams;
+            paramsList.RefreshItems();
+        }
+        
+        private void BindItem(VisualElement e, int i)
+        {
+            TextField key = e.Q<TextField>("keyField");
+            TextField value = e.Q<TextField>("valueField");
+
+            key.value = currentSettings.headerParams[i].key;
+            value.value = currentSettings.headerParams[i].value;
+
+            key.RegisterCallback<ChangeEvent<string>>((s) =>
+            {
+                currentSettings.headerParams[i].key = s.newValue;
+                RefreshParamList();
+            });
+
+
+            value.RegisterCallback<ChangeEvent<string>>((s) =>
+            {
+                currentSettings.headerParams[i].value = s.newValue;
+                RefreshParamList();
+            });
+
+        }
+
+   
+
+
+        private VisualElement GetParameterElement()
+        {
+            VisualElement item = new VisualElement();
+
+            //Key field
+            TextField keyField = new TextField();
+            keyField.name = "keyField";
+            keyField.AddToClassList("horizontal-align-child");
+            keyField.AddToClassList("parameter-field");
+            keyField.value = "Key";
+
+            //Key field
+            TextField valueField = new TextField();
+            valueField.name = "valueField";
+            valueField.AddToClassList("horizontal-align-child");
+            valueField.AddToClassList("parameter-field");
+            valueField.value = "Value";
+
+            item.Add(keyField);
+            item.Add(valueField);
+            item.AddToClassList("horizontal-align");
+            return item;
         }
 
         //send the request
@@ -62,10 +154,9 @@ namespace UnityPost.Editor
             //construct the web request
             WebRequestItem webRequestItem = new WebRequestItem(settings.url);
             webRequestItem.PrependWithDefaultURL = false;
-            webRequestItem.SetPort(4000);
 
             string result = "";
-            
+
             //Send request
             switch (settings.currentType)
             {
@@ -77,25 +168,26 @@ namespace UnityPost.Editor
                     break;
             }
 
+            Debug.Log(result);
+
             //display the result
             DisplayOutput(result);
-
         }
-        
+
         public async void SendDemoRequest()
         {
             //1. Construct the web request
             WebRequestItem webRequestItem = new WebRequestItem("https://jsonplaceholder.typicode.com/posts/1");
             webRequestItem.PrependWithDefaultURL = false;
-            
+
             //2. Add any needed parameters to the request
             webRequestItem.AddParameter("name", "namusanga");
 
             //3. Set a custom authentication
             webRequestItem.SetCustomAuthentication("LINSDC9474479HF394B8FW8742");
-            
+
             string result = "";
-            
+
             //4. Send request
             result = await WebRequestsEngine.Active.GET(webRequestItem);
 
@@ -119,9 +211,31 @@ namespace UnityPost.Editor
     /// <summary>
     ///stores the current settings in the post window
     /// </summary>
-    public class PostWindowSettings
+    public class PostWindowSettings : ScriptableObject
     {
         public RequestTypes currentType = RequestTypes.GET;
         public string url;
+        public ParameterList currentParameterList = ParameterList.Headers;
+        public List<Parameter> headerParams = new List<Parameter>();
+        public List<Parameter> bodyParams = new List<Parameter>();
+
+
+        public enum ParameterList
+        {
+            Headers,
+            Body
+        }
+
+        public class Parameter
+        {
+            public Parameter(string _key, string _value)
+            {
+                key = _key;
+                value = _value;
+            }
+
+            public string key;
+            public string value;
+        }
     }
 }

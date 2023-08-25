@@ -1,15 +1,39 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="true">
-    <Style src="project://database/Assets/UnityPost%20Builder/Editor/BuilderWindow/PostBuilderWindow.uss?fileID=7433441132597879392&amp;guid=cb716e067afe2cd42b7b3d11cf974f99&amp;type=3#PostBuilderWindow" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="true">
+    <Style src="project://database/Assets/UnityPost%20Builder/Editor/BuilderWindow/PostBuilderWindow.uss?fileID=7433441132597879392&amp;guid=cb716e067afe2cd42b7b3d11cf974f99&amp;type=3#PostBuilderWindow"/>
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-        <ui:VisualElement name="right-side-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 100%; width: 70%;">
-            <ui:VisualElement name="ip-info" style="flex-grow: initial; background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 42px; width: auto; margin-left: 9px; margin-right: 9px; margin-top: 9px; margin-bottom: 9px; flex-shrink: initial;">
-                <ui:EnumField name="the-uxml-field" include-obsolete-values="false" />
-                <ui:TextField picking-mode="Ignore" name="url-input" value="Enter URL or paste text" style="flex-grow: 1;" />
-                <ui:Button text="Send" name="send-button" />
+        <ui:VisualElement name="right-side-panel"
+                          style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 100%; width: 70%;">
+            <ui:VisualElement name="ip-info"
+                              style="flex-grow: initial; background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 42px; width: auto; margin-left: 9px; margin-right: 9px; margin-top: 9px; margin-bottom: 9px; flex-shrink: initial;">
+                <ui:EnumField name="the-uxml-field" include-obsolete-values="false"/>
+                <ui:TextField picking-mode="Ignore" name="url-input" value="Enter URL or paste text"
+                              style="flex-grow: 1;"/>
+                <ui:Button text="Send" name="send-button"/>
             </ui:VisualElement>
-            <ui:VisualElement name="request-data" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: auto; margin-left: 9px; margin-right: 9px; margin-top: 9px; margin-bottom: 9px; flex-shrink: initial;">
-                <ui:Label text="Response" name="the-uxml-label" class="bold-text" />
-                <ui:TextField picking-mode="Ignore" name="result-output" value="Enter the URL and click Send to get a response" multiline="true" readonly="true" focusable="false" style="flex-grow: 1; width: 100%; height: 100%;" />
+
+
+<!--            <ui:VisualElement name="tab-menu" class="horizontal-align" style="background-color: rgba(1, 0, 0, 0); ">-->
+<!--                <ui:Button text="Header" class="tab-button horizontal-align-child"/>-->
+<!--                <ui:Button text="Body" class="tab-button horizontal-align-child"/>-->
+<!--            </ui:VisualElement>-->
+
+<!--            <ui:VisualElement name="parameter-parent" class="parameter-parent">-->
+<!--                <ui:ListView class="list-view" name="header-list"/>-->
+<!--                <ui:VisualElement name="button-parameter-parent" class="horizontal-align">-->
+<!--                    <ui:Button text="Add Parameter" name="parameter-add" class="horizontal-align-child"/>-->
+<!--                    <ui:Button text="Remove Parameter" name="parameter-remove" class=" horizontal-align-child"/>-->
+<!--                </ui:VisualElement>-->
+<!--            </ui:VisualElement>-->
+
+
+            <ui:VisualElement name="request-data" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: auto;
+             margin: 10px;">
+                <ui:Label text="Response" name="the-uxml-label" class="bold-text"/>
+                <ui:TextField picking-mode="Ignore" name="result-output"
+                              value="Enter the URL and click Send to get a response" multiline="true" readonly="true"
+                              focusable="false" style="flex-grow: 1; width: 100%; height: 100%;"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
